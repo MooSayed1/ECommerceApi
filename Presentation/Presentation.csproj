@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Presintation</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Services.Abstraction\Services.Abstraction.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+<!--      <PackageReference Include="AutoMapper" Version="15.0.1" />-->
+      <PackageReference Include="AutoMapper" Version="15.0.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+    </ItemGroup>
+
+</Project>
