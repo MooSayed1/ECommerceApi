@@ -9,10 +9,11 @@ namespace Presintation;
 public class BasketController(IServiceManager serviceManager) : ControllerBase
 {
     // GET
-    [HttpGet("id")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<BasketDto>> Get(string id)
     {
         var basket=await serviceManager.BasketService.GetBasketAsync(id);
+        if (basket == null) return NotFound();
         return Ok(basket);
     }
 
@@ -20,13 +21,15 @@ public class BasketController(IServiceManager serviceManager) : ControllerBase
     public async Task<ActionResult<BasketDto>> UpdateOrCreateBasket(BasketDto basketDto)
     {
         var basket = await serviceManager.BasketService.UpdateBasketAsync(basketDto);
+        if (basket == null) return NotFound();
         return Ok(basket);
     }
 
-    [HttpDelete("id")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(string id)
     {
-        await serviceManager.BasketService.DeleteBasketAsync(id);
+        bool isDeleted = await serviceManager.BasketService.DeleteBasketAsync(id);
+        if (!isDeleted) return NotFound();
         return NoContent();
     }
 }
