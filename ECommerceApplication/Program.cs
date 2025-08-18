@@ -11,7 +11,7 @@ using Services.MappingProfiles;
 
 namespace E_commerceApplication;
 
-public class Program
+public static class Program
 {
     public static async Task Main(string[] args)
     {
@@ -19,10 +19,10 @@ public class Program
         
         // Core Services
         builder.Services.AddCoreServices();
-        // Presentation Services
-        builder.Services.AddPresentationServices();
         // Infrastructure Services
         builder.Services.AddInfrastructureServices(builder.Configuration);
+        // Presentation Services
+        builder.Services.AddPresentationServices();
         
 
         var app = builder.Build();
@@ -40,7 +40,6 @@ public class Program
         app.UseStaticFiles();
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 

@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Domain.Contracts;
 using Newtonsoft.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using StackExchange.Redis;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 

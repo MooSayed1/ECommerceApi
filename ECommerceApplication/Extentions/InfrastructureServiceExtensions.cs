@@ -2,6 +2,7 @@ using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data.Contexts;
 using Persistance.Data.DataSeeding;
+using Persistance.Identity;
 using Persistance.Repositories;
 using StackExchange.Redis;
 
@@ -14,6 +15,11 @@ public static class InfrastructureServiceExtensions
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
         );
+        
+        
+        services.AddDbContext<IdentityAppDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"))
+        );
 
         services.AddScoped<IDbInitializer, DbInitializer>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -23,6 +29,7 @@ public static class InfrastructureServiceExtensions
             );
         
         services.AddScoped<IBasketRepository, BasketRepository>();
+        
         return services;
     }
 }
