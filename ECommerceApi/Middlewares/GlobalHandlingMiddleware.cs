@@ -23,6 +23,10 @@ public class GlobalHandlingMiddleware
         try
         {
             await _next.Invoke(httpContext);
+            if (httpContext.Response.StatusCode == StatusCodes.Status404NotFound)
+            {
+                await HandelNotFoundAsync(httpContext);
+            }
         }
         catch (Exception ex)
         {
@@ -31,11 +35,22 @@ public class GlobalHandlingMiddleware
         }
     }
 
-    private async Task HandeExceptionAsync(HttpContext context, Exception ex)
+    private async Task HandelNotFoundAsync(HttpContext httpContext)
     {
-        context.Response.ContentType = "application/json";
+        httpContext.Response.ContentType = "application/json";
+        var response = new ErrorDetails()
+        {
+            StatusCode = StatusCodes.Status404NotFound,
+            ErrorMessage = $"This End Point {httpContext.Request.Path} was not found."
+        };
+        await httpContext.Response.WriteAsync(response.ToString());
+    }
+
+    private async Task HandeExceptionAsync(HttpContext httpContext, Exception ex)
+    {
+        httpContext.Response.ContentType = "application/json";
         // context.Response.StatusCode = StatusCodes.Status500InternalServerError; // 500
-        context.Response.StatusCode = ex switch
+        httpContext.Response.StatusCode = ex switch
         {
             NotFoundException => StatusCodes.Status404NotFound,
             _ => StatusCodes.Status500InternalServerError,
@@ -43,9 +58,9 @@ public class GlobalHandlingMiddleware
         var response = new ErrorDetails()
         {
             ErrorMessage = ex.Message,
-            StatusCode = context.Response.StatusCode
+            StatusCode = httpContext.Response.StatusCode
         };
 
-        await context.Response.WriteAsync(response.ToString()); // ToString convert to Json
+        await httpContext.Response.WriteAsync(response.ToString()); // ToString convert to Json
     }
 }

@@ -33,6 +33,8 @@ public class ProductService(IUnitOfWork unitOfWork, IMapper mapper) : IProductSe
         var product = await unitOfWork.GetRepo<Product, int>()
             .GetByIdAsync(new ProductWithBrandAndTypeSpecifications(id));
         
+        
+        
         return product is null? throw new ProductNotFoundException(id) : mapper.Map<ProductResultDto?>(product);
     }
 

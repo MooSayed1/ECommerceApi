@@ -12,7 +12,7 @@ public class ApiResponseFactory
             .Select(e => new ValidationErrorResponse.ValidationError()
             {
                 Field = e.Key,
-                Errors = e.Value.Errors.Select(err => err.ErrorMessage).ToArray()
+                Errors = e.Value!.Errors.Select(err => err.ErrorMessage).ToArray()
             });
 
         var response = new ValidationErrorResponse
