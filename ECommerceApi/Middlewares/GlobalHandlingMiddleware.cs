@@ -16,22 +16,22 @@ public class GlobalHandlingMiddleware
         _next = next;
         _logger = logger;
     }
-    
+
     // Response [statusCode,ErrorMsg]
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext httpContext)
     {
         try
         {
-            await _next.Invoke(context);
+            await _next.Invoke(httpContext);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message);
-            await HandeExceptionAsync(context,ex);
+            await HandeExceptionAsync(httpContext, ex);
         }
     }
 
-    private async Task HandeExceptionAsync(HttpContext context,Exception ex)
+    private async Task HandeExceptionAsync(HttpContext context, Exception ex)
     {
         context.Response.ContentType = "application/json";
         // context.Response.StatusCode = StatusCodes.Status500InternalServerError; // 500
@@ -45,8 +45,7 @@ public class GlobalHandlingMiddleware
             ErrorMessage = ex.Message,
             StatusCode = context.Response.StatusCode
         };
-        
-        await context.Response.WriteAsync(response.ToString()); // ToString convert to Json
 
+        await context.Response.WriteAsync(response.ToString()); // ToString convert to Json
     }
 }

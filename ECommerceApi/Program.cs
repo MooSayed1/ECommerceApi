@@ -1,7 +1,9 @@
 using Domain.Contracts;
 using E_commerceApplication.Extentions;
 using E_commerceApplication.Middlewares;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Persistance.Data.Contexts;
 using Persistance.Data.DataSeeding;
 using Persistance.Repositories;
@@ -24,6 +26,10 @@ public static class Program
         builder.Services.AddInfrastructureServices(builder.Configuration);
         // Presentation Services
         builder.Services.AddPresentationServices();
+        builder.Services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.InvalidModelStateResponseFactory = context => 
+        });
         
 
         var app = builder.Build();
