@@ -6,6 +6,6 @@ public class ApiResponseFactory
 {
     public IActionResult CustomValidationErrorResponse(ActionContext context)
     {
-        
+        return new BadRequestObjectResult(context.ModelState);
     }
 }

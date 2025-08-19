@@ -28,7 +28,7 @@ public static class Program
         builder.Services.AddPresentationServices();
         builder.Services.Configure<ApiBehaviorOptions>(options =>
         {
-            options.InvalidModelStateResponseFactory = context => 
+            options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(context.ModelState);
         });
         
 
