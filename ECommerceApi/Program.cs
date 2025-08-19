@@ -48,6 +48,8 @@ public static class Program
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
+        app.UseAuthentication();
+        app.UseMiddleware<RoleBasedAuthorizationMiddleware>();
         app.UseAuthorization();
 
         app.MapControllers();

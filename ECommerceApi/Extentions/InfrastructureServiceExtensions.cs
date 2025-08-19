@@ -1,11 +1,16 @@
 using Domain.Contracts;
+using Domain.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Persistance.Data.Contexts;
 using Persistance.Data.DataSeeding;
 using Persistance.Identity;
+using Persistance.Identity.DataSeeding;
 using Persistance.Repositories;
 using StackExchange.Redis;
+using System.Text;
 
 namespace E_commerceApplication.Extentions;
 
@@ -23,7 +28,7 @@ public static class InfrastructureServiceExtensions
             options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"))
         );
 
-        services.AddIdentity<IdentityUser, IdentityRole>()
+        services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<IdentityAppDbContext>()
             .AddDefaultTokenProviders();
 
@@ -45,7 +50,25 @@ public static class InfrastructureServiceExtensions
             options.User.RequireUniqueEmail = true;
         });
 
+        // JWT Authentication
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"] ?? "fallback-secret-key-for-development-only")),
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["JWT:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = configuration["JWT:Audience"],
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
         services.AddScoped<IDbInitializer, DbInitializer>();
+        services.AddScoped<IIdentityDbInitializer, IdentityDbInitializer>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddSingleton<IConnectionMultiplexer>(_ =>
