@@ -1,6 +1,7 @@
 using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
+using Domain.Exceptions;
 using Services.Abstraction.Interfaces;
 using Services.Specifications;
 using Shared;
@@ -31,9 +32,8 @@ public class ProductService(IUnitOfWork unitOfWork, IMapper mapper) : IProductSe
     {
         var product = await unitOfWork.GetRepo<Product, int>()
             .GetByIdAsync(new ProductWithBrandAndTypeSpecifications(id));
-        var mappedProduct = mapper.Map<ProductResultDto?>(product);
         
-        return mappedProduct;
+        return product is null? throw new ProductNotFoundException(id) : mapper.Map<ProductResultDto?>(product);
     }
 
     public async Task<IEnumerable<BrandResultDto>> GetAllProductBrandsAsync()

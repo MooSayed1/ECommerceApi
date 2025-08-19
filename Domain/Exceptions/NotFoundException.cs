@@ -1,3 +1,3 @@
 namespace Domain.Exceptions;
 
-public class NotFoundExceptions(string message) : Exception(message);
+public class NotFoundException(string message) : Exception(message);

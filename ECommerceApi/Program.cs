@@ -1,5 +1,6 @@
 using Domain.Contracts;
 using E_commerceApplication.Extentions;
+using E_commerceApplication.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data.Contexts;
 using Persistance.Data.DataSeeding;
@@ -35,6 +36,8 @@ public static class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseMiddleware<GlobalHandlingMiddleware>();
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
