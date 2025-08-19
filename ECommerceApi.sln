@@ -1,5 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceApi", "ECommerceApi\ECommerceApi.csproj", "{0767E142-DCEB-488B-A3AD-DA1D177C0A04}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{850F70C8-8B5F-419A-82DD-FBE2B26AD2EF}"
@@ -17,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Abstraction", "Services.Abstraction\Services.Abstraction.csproj", "{77BFDA4F-ECA0-468B-B69B-4C464DF05872}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{F5999575-8A76-43E6-B9DE-B46068E4CA8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerceApi.IntegrationTests", "ECommerceApi.IntegrationTests\ECommerceApi.IntegrationTests.csproj", "{2DBF5CCF-ABD0-4BF5-BD27-29B2D5C5C3A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +55,10 @@ Global
 		{F5999575-8A76-43E6-B9DE-B46068E4CA8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5999575-8A76-43E6-B9DE-B46068E4CA8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5999575-8A76-43E6-B9DE-B46068E4CA8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DBF5CCF-ABD0-4BF5-BD27-29B2D5C5C3A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DBF5CCF-ABD0-4BF5-BD27-29B2D5C5C3A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DBF5CCF-ABD0-4BF5-BD27-29B2D5C5C3A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DBF5CCF-ABD0-4BF5-BD27-29B2D5C5C3A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E76CAB17-9C44-402E-924A-5DE392A2613E} = {850F70C8-8B5F-419A-82DD-FBE2B26AD2EF}
