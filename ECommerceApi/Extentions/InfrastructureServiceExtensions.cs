@@ -23,9 +23,7 @@ public static class InfrastructureServiceExtensions
             options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"))
         );
 
-        services.AddIdentity<IdentityUser, IdentityRole>()
-            .AddEntityFrameworkStores<IdentityAppDbContext>()
-            .AddDefaultTokenProviders();
+        services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<IdentityAppDbContext>();
 
         // Configure Identity options
         services.Configure<IdentityOptions>(options =>
@@ -36,10 +34,6 @@ public static class InfrastructureServiceExtensions
             options.Password.RequireNonAlphanumeric = true;
             options.Password.RequireUppercase = true;
             options.Password.RequiredLength = 8;
-
-            // Lockout settings
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            options.Lockout.MaxFailedAccessAttempts = 5;
 
             // User settings
             options.User.RequireUniqueEmail = true;

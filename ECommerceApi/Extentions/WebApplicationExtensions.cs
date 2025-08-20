@@ -10,6 +10,7 @@ public static class WebApplicationExtensions
         using var scope = app.Services.CreateScope();
         var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
         await dbInitializer.InitializeDbAsync();
+        await dbInitializer.IdentitySeedAsync();
         return app;
     }
 }
