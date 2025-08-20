@@ -25,6 +25,7 @@ public static class Program
         builder.Services.AddCoreServices();
         // Infrastructure Services
         builder.Services.AddInfrastructureServices(builder.Configuration);
+        builder.Services.ConfigureJwt(builder.Configuration);
         // Presentation Services
         builder.Services.AddPresentationServices();
         
@@ -50,6 +51,7 @@ public static class Program
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();
