@@ -1,7 +1,10 @@
+using System.Text;
 using Domain.Contracts;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Persistance.Data.Contexts;
 using Persistance.Data.DataSeeding;
 using Persistance.Identity;
@@ -49,6 +52,31 @@ public static class InfrastructureServiceExtensions
 
         services.AddScoped<IBasketRepository, BasketRepository>();
 
+        return services;
+    }
+
+    public static IServiceCollection ConfigureJwt(this IServiceCollection services,IConfiguration configuration)
+    {
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidAudience = configuration["JwtOptions:Audience"],
+                ValidIssuer = configuration["JwtOptions:Issuer"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtOptions:Key"]!))
+            };
+        });
+        
+        services.AddAuthorization();
+        
         return services;
     }
 }

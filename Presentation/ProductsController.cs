@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction.Interfaces;
 using Shared;
 namespace Presintation;
 
 
+[Authorize] // should Login First
 public class ProductsController(IServiceManager serviceManager) :  ApiController 
 {
     [HttpGet]

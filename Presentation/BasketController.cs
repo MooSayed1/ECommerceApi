@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction.Interfaces;
 using Shared.Dtos.CustomerBasketDtos;
 
 namespace Presintation;
 
+[Authorize] // should Login First
 public class BasketController(IServiceManager serviceManager) : ApiController 
 {
     // GET
