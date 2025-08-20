@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Services.Abstraction;
+using Services.Abstraction.Interfaces;
 using Shared.Dtos.User;
 using ValidationException = Domain.Exceptions.ValidationException;
 
@@ -62,7 +63,7 @@ public class AuthenticationService(UserManager<User> userManager,IConfiguration 
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
         // d8336c239e1122e51b5a0a34d6968efb376134171fba9a697eab85efab82a16f003eaaa9f9a1dfc8f400197a991b8dce
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("JwtOptions:Key"));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtOptions:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(issuer:configuration["JwtOptions:Issuer"],audience:configuration["JwtOptions:Audience"],claims:claims,expires:DateTime.Now.AddDays(Convert.ToDouble(configuration["JwtOptions:ExpireDate"])),signingCredentials:creds);
