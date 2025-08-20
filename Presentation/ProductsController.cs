@@ -3,10 +3,8 @@ using Services.Abstraction.Interfaces;
 using Shared;
 namespace Presintation;
 
-[ApiController]
-[Route("api/[controller]")]
 
-public class ProductsController(IServiceManager serviceManager) : ControllerBase
+public class ProductsController(IServiceManager serviceManager) :  ApiController 
 {
     [HttpGet]
     public async Task<ActionResult<PaginatedResult<ProductResultDto>>> GetAllProducts([FromQuery]ProductParametersSpecifications productParametersSpecifications)

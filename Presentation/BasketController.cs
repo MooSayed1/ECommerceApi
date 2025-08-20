@@ -4,9 +4,7 @@ using Shared.Dtos.CustomerBasketDtos;
 
 namespace Presintation;
 
-[ApiController]
-[Route("api/[controller]")] // localhost/api/basket
-public class BasketController(IServiceManager serviceManager) : ControllerBase
+public class BasketController(IServiceManager serviceManager) : ApiController 
 {
     // GET
     [HttpGet("{id}")]
