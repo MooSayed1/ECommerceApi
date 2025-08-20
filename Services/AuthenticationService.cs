@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Services.Abstraction;
+using Services.Abstraction.Interfaces;
 using Shared.Dtos.User;
 using ValidationException = Domain.Exceptions.ValidationException;
 
