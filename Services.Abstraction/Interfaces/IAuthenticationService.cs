@@ -1,5 +1,5 @@
-using Domain.Entities;
 using Shared.Dtos.User;
+using Domain.Entities;
 
 namespace Services.Abstraction;
 
