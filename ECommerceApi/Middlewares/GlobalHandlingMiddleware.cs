@@ -49,19 +49,27 @@ public class GlobalHandlingMiddleware
     private async Task HandeExceptionAsync(HttpContext httpContext, Exception ex)
     {
         httpContext.Response.ContentType = "application/json";
-        // context.Response.StatusCode = StatusCodes.Status500InternalServerError; // 500
+        
+        var response = new ErrorDetails()
+        {
+            ErrorMessage = ex.Message,
+        };
+        
         httpContext.Response.StatusCode = ex switch
         {
             NotFoundException => StatusCodes.Status404NotFound,
             UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+            ValidationException validationException => HandelValidationAsync(response, validationException),
             _ => StatusCodes.Status500InternalServerError,
-        };
-        var response = new ErrorDetails()
-        {
-            ErrorMessage = ex.Message,
-            StatusCode = httpContext.Response.StatusCode
         };
 
         await httpContext.Response.WriteAsync(response.ToString()); // ToString convert to Json
+    }
+
+    private int HandelValidationAsync(ErrorDetails response , ValidationException validationException)
+    {
+        response.Errors = validationException.Errors;
+        response.StatusCode = StatusCodes.Status400BadRequest;
+        return StatusCodes.Status400BadRequest;
     }
 }

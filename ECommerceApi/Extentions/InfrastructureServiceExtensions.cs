@@ -1,4 +1,5 @@
 using Domain.Contracts;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data.Contexts;
@@ -23,7 +24,7 @@ public static class InfrastructureServiceExtensions
             options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"))
         );
 
-        services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<IdentityAppDbContext>();
+        services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<IdentityAppDbContext>();
 
         // Configure Identity options
         services.Configure<IdentityOptions>(options =>

@@ -3,6 +3,7 @@ using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Services.Abstraction;
 using Shared.Dtos.User;
+using ValidationException = Domain.Exceptions.ValidationException;
 
 namespace Services;
 
@@ -31,11 +32,14 @@ public class AuthenticationService(UserManager<User> _userManager) : IAuthentica
             PhoneNumber = registerDto.PhoneNumber,
             UserName = registerDto.UserName
         };
+
         var result = await _userManager.CreateAsync(user, registerDto.Password);
-        if (!result.Succeeded)
-        {
-            
-        }
+
+        if (result.Succeeded)
+            return new UserResultDto(user.DisplayName, "Token", user.Email);
         
-    };
+        var errors = result.Errors.Select(e => e.Description).ToList();
+        
+        throw new ValidationException(errors);
+    }
 }
