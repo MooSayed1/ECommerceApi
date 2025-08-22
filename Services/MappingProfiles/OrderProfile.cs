@@ -8,9 +8,18 @@ public class OrderProfile :  Profile
 {
     public OrderProfile()
     {
-        CreateMap<Order,OrderResultDto>()
-            .ForMember(o=>o.DeliveryMethod,opt=>opt.MapFrom(d=>d.DeliveryMethod.ShortName))
-            .ReverseMap();
+        CreateMap<Address, AddressDto>();
+        CreateMap<DeliveryMethod, DeliveryMethodDto>();
         
+        CreateMap<OrderItem, OrderItemDto>()
+            .ForMember(o => o.ProductId, opt => opt.MapFrom(src => src.Product.ProductId))
+            .ForMember(o => o.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
+            .ForMember(o => o.PictureUrl, opt => opt.MapFrom(src => src.Product.PictureUrl)).ReverseMap();
+
+        CreateMap<Order, OrderResultDto>()
+            .ForMember(o => o.DeliveryMethod, opt => opt.MapFrom(d => d.DeliveryMethod.ShortName))
+            .ForMember(o => o.PaymentStatus, opt => opt.MapFrom(d => d.ToString()))
+            .ForMember(o=>o.Total,opt=>opt.MapFrom(src=>src.SubTotal+src.DeliveryMethod.Price));
+
     }
 }

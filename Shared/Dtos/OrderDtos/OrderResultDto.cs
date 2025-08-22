@@ -15,4 +15,5 @@ public record OrderResultDto
     public decimal SubTotal { get; init; }
     DateTimeOffset OrderDate { get; init; } =  DateTimeOffset.Now;
     public string PaymentIntendId { get; init; } = string.Empty;
+    public int Total { get; init; }
 }

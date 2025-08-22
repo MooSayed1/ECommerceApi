@@ -1,6 +1,5 @@
 namespace Domain.Exceptions;
 
-public class BasketNotFoundException 
+public sealed class BasketNotFoundException(int id) : NotFoundException($"Basket With id {id} Not Found")
 {
-    
 }

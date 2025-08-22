@@ -8,10 +8,12 @@ namespace Services.Abstraction.Interfaces;
 public interface IOrderService
 {
     // get order by id
-    public Task<OrderResultDto> GetOrderById(Guid id); 
+    Task<OrderResultDto> GetOrderByIdAsync(Guid id); 
     // Get all orders for user by email
-    public Task<IEnumerable<OrderResultDto>> GetOrders(string? email);
+    Task<IEnumerable<OrderResultDto>> GetAllOrdersByEmailAsync(string? email);
     // Create order
+    Task <OrderResultDto> AddOrderAsync(OrderRequest order, string email);
     // public bool CreateOrder(OrderParams orderParams);
     // get all delievery methods
+    Task<IEnumerable<DeliveryMethodDto>> GetAllDeliveryMethodsAsync();
 }
