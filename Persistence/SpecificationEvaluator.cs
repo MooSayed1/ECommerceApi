@@ -1,3 +1,5 @@
+using Domain.Contracts;
+
 namespace Persistance;
 
 public static class SpecificationEvaluator

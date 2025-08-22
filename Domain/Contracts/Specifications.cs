@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Domain.Entities;
+namespace Domain.Contracts;
 
 public abstract class Specifications<T>(Expression<Func<T, bool>>? criteria)
 {
