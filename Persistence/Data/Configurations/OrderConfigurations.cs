@@ -1,0 +1,18 @@
+using Domain.Entities.OrderEntities;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Shared.Enums;
+
+namespace Persistance.Data.Configurations;
+
+public class OrderConfigurations :  IEntityTypeConfiguration<Order>
+{
+    public void Configure(EntityTypeBuilder<Order> builder)
+    {
+        builder.OwnsOne(o => o.ShippingAddress,p=>p.WithOwner()); // 1 to 1 relation total
+        builder.HasMany(o => o.OrderItems).WithOne();
+        builder.Property(o => o.PaymentStatus).HasConversion(paymentStatus => paymentStatus.ToString()
+            ,s=> Enum.Parse<OrderPaymentStatus>(s));
+        builder.HasOne(d=>d.DeliveryMethod).WithMany().OnDelete(DeleteBehavior.SetNull);
+        builder.Property(o=>o.SubTotal).HasColumnType("decimal(18,3)");
+    }
+}
