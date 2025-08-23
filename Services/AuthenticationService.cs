@@ -1,19 +1,23 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using Domain.Entities;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Services.Abstraction;
 using Services.Abstraction.Interfaces;
+using Shared.Dtos.OrderDtos;
 using Shared.Dtos.User;
 using ValidationException = Domain.Exceptions.ValidationException;
 
 namespace Services;
 
-public class AuthenticationService(UserManager<User> userManager,IConfiguration configuration) : IAuthenticationService
+public class AuthenticationService(UserManager<User> userManager, IConfiguration configuration, IMapper mapper)
+    : IAuthenticationService
 {
     public async Task<UserResultDto> LoginAsync(LoginDto loginDto)
     {
@@ -26,7 +30,7 @@ public class AuthenticationService(UserManager<User> userManager,IConfiguration 
         if (!isPasswordValid)
             throw new UnAuthorizedException();
 
-        return new UserResultDto(user.DisplayName,await CreateTokenAsync(user), user.Email);
+        return new UserResultDto(user.DisplayName, await CreateTokenAsync(user), user.Email);
     }
 
     public async Task<UserResultDto> RegisterAsync(RegisterDto registerDto)
@@ -43,13 +47,49 @@ public class AuthenticationService(UserManager<User> userManager,IConfiguration 
 
         if (result.Succeeded)
             return new UserResultDto(user.DisplayName, await CreateTokenAsync(user), user.Email);
-        
+
         var errors = result.Errors.Select(e => e.Description).ToList();
-        
+
         throw new ValidationException(errors);
     }
 
-    public async Task<string> CreateTokenAsync(User user)
+    public async Task<bool> CheckIfUserExist(string email)
+    {
+        return await userManager.FindByEmailAsync(email) != null;
+    }
+
+    public async Task<AddressDto> GetUserAddress(string email)
+    {
+        var user = await userManager.Users.Include(o => o.Address).FirstOrDefaultAsync(o => o.Email == email)
+                   ?? throw new UserNotFoundException(email);
+        return mapper.Map<AddressDto>(user.Address);
+    }
+
+    public async Task<UserResultDto> GetUserByEmail(string email)
+    {
+        var user = await userManager.FindByEmailAsync(email) ?? throw new UserNotFoundException(email);
+        return new UserResultDto(user.DisplayName, await CreateTokenAsync(user), user.Email);
+    }
+
+    public async Task<AddressDto> UpdateUserAddress(string email, AddressDto addressDto)
+    {
+        var user = await userManager.Users.Include(o => o.Address).FirstOrDefaultAsync(o => o.Email == email)
+                   ?? throw new UserNotFoundException(email);
+        if (user?.Address != null)
+        {
+            user.Address.FirstName = addressDto.FirstName;
+            user.Address.LastName = addressDto.LastName;
+            user.Address.City = addressDto.City;
+            user.Address.Country = addressDto.Country;
+            user.Address.Street = addressDto.Street;
+        }
+
+        user!.Address = mapper.Map<Address>(addressDto);
+        await userManager.UpdateAsync(user);
+        return  mapper.Map<AddressDto>(user.Address);
+    }
+
+    private async Task<string> CreateTokenAsync(User user)
     {
         var claims = new List<Claim>()
         {
@@ -62,11 +102,14 @@ public class AuthenticationService(UserManager<User> userManager,IConfiguration 
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
-        // d8336c239e1122e51b5a0a34d6968efb376134171fba9a697eab85efab82a16f003eaaa9f9a1dfc8f400197a991b8dce
+
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtOptions:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var token = new JwtSecurityToken(issuer:configuration["JwtOptions:Issuer"],audience:configuration["JwtOptions:Audience"],claims:claims,expires:DateTime.Now.AddDays(Convert.ToDouble(configuration["JwtOptions:ExpireDate"])),signingCredentials:creds);
+        var token = new JwtSecurityToken(issuer: configuration["JwtOptions:Issuer"],
+            audience: configuration["JwtOptions:Audience"], claims: claims,
+            expires: DateTime.UtcNow.AddDays(Convert.ToDouble(configuration["JwtOptions:ExpireDate"])),
+            signingCredentials: creds);
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

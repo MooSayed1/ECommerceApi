@@ -13,7 +13,7 @@ public class ServiceManager(IUnitOfWork unitOfWork, IMapper mapper, IBasketRepos
     // defer execution of ProductService creation until it's actually necessary
     private readonly Lazy<IProductService> _productService = new(() => new ProductService(unitOfWork, mapper));
     private readonly Lazy<IBasketService> _basketService = new (()=>new BasketService(basketRepository, mapper));
-    private readonly Lazy<IAuthenticationService> _authService = new (()=>new AuthenticationService(userManager,configuration));
+    private readonly Lazy<IAuthenticationService> _authService = new (()=>new AuthenticationService(userManager,configuration,mapper));
     private readonly Lazy<IOrderService> _orderService = new (()=>new OrderService(unitOfWork,mapper,basketRepository));
     public IProductService ProductService => _productService.Value;
     public IBasketService BasketService =>  _basketService.Value;
