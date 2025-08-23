@@ -16,5 +16,6 @@ public class OrderSpecifications : Specifications<Order>
     {
         IncludeExpressions.Add(x => x.OrderItems);
         IncludeExpressions.Add(x => x.DeliveryMethod);
+        SetOrderByAscending(o=>o.OrderDate);
     }
 }

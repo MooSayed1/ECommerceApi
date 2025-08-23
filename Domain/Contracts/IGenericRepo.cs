@@ -2,7 +2,7 @@ using Domain.Entities;
 
 namespace Domain.Contracts;
 
-public interface IGenericRepo<TEntity, TKey> where TEntity : BaseEntity<TKey>
+public interface IGenericRepo<TEntity, in TKey> where TEntity : BaseEntity<TKey>
 {
     public Task<TEntity?> GetByIdAsync(TKey? id);
     public Task<IEnumerable<TEntity>> GetAllAsync(bool asNoTracking = false);

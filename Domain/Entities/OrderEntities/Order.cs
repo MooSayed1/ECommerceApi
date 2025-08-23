@@ -32,6 +32,6 @@ public class Order : BaseEntity<Guid>
     public DeliveryMethod DeliveryMethod { get; set; }
     public int? DeliveryMethodId { get; set; }
     public decimal SubTotal { get; set; }
-    DateTimeOffset OrderDate { get; set; } =  DateTimeOffset.Now;
+    public DateTimeOffset OrderDate { get; set; } =  DateTimeOffset.Now;
     public string PaymentIntendId { get; set; } = string.Empty;
 }

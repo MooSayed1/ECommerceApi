@@ -6,14 +6,14 @@ public class ProductInOrderItem
     {
         
     }
-    public ProductInOrderItem(string productId, string productName, string pictureUrl)
+    public ProductInOrderItem(int productId, string productName, string pictureUrl)
     {
         ProductId = productId;
         ProductName = productName;
         PictureUrl = pictureUrl;
     }
 
-    public string ProductId { get; set; }
+    public int ProductId { get; set; }
     public string ProductName { get; set; }
     public string PictureUrl { get; set; }
 }

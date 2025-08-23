@@ -12,7 +12,7 @@ public interface IOrderService
     // Get all orders for user by email
     Task<IEnumerable<OrderResultDto>> GetAllOrdersByEmailAsync(string? email);
     // Create order
-    Task <OrderResultDto> AddOrderAsync(OrderRequest order, string email);
+    Task <OrderResultDto> AddOrderAsync(OrderRequest request, string email);
     // public bool CreateOrder(OrderParams orderParams);
     // get all delievery methods
     Task<IEnumerable<DeliveryMethodDto>> GetAllDeliveryMethodsAsync();
