@@ -1,63 +1,65 @@
 using System.Text.Json;
 using Domain.Contracts;
+using Domain.Entities.OrderEntities;
 using Microsoft.AspNetCore.Identity;
 using Persistance.Data.Contexts;
 
 namespace Persistance.Data.DataSeeding;
 
-public class DbInitializer : IDbInitializer
+public class DbInitializer(AppDbContext dbContext, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+    : IDbInitializer
 {
-    private readonly AppDbContext _dbcontext;
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly UserManager<User> _userManager;
-
-    public DbInitializer(AppDbContext dbcontext, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
-    {
-        _dbcontext = dbcontext;
-        _roleManager = roleManager;
-        _userManager = userManager;
-    }
-
     public async Task InitializeDbAsync()
     {
         try
         {
-            if ((await _dbcontext.Database.GetPendingMigrationsAsync()).Any())
+            // if ((await _dbContext.Database.GetPendingMigrationsAsync()).Any()) // related to production
+            // {
+            await dbContext.Database.MigrateAsync();
+            if (!dbContext.Products.Any())
             {
-                await _dbcontext.Database.MigrateAsync();
-                if (!_dbcontext.Products.Any())
+                var productsData = await File.ReadAllTextAsync("../Persistence/Data/DataSeeding/products.json");
+                var products = JsonSerializer.Deserialize<List<Product>>(productsData);
+                if (products != null)
                 {
-                    var productsData = await File.ReadAllTextAsync("../Persistence/Data/DataSeeding/products.json");
-                    var products = JsonSerializer.Deserialize<List<Product>>(productsData);
-                    if (products != null)
-                    {
-                        await _dbcontext.AddRangeAsync(products);
-                    }
+                    await dbContext.AddRangeAsync(products);
                 }
-
-                if (!_dbcontext.ProductTypes.Any())
-                {
-                    var productsTypesData = await File.ReadAllTextAsync("../Persistence/Data/DataSeeding/types.json");
-                    var types = JsonSerializer.Deserialize<List<ProductType>>(productsTypesData);
-                    if (types != null)
-                    {
-                        await _dbcontext.AddRangeAsync(types);
-                    }
-                }
-
-                if (!_dbcontext.ProductBrands.Any())
-                {
-                    string brandsPath = Path.Combine("../Persistence/Data/DataSeeding/brands.json");
-                    var productsBrandsData = await File.ReadAllTextAsync(brandsPath);
-                    var brands = JsonSerializer.Deserialize<List<ProductBrand>>(productsBrandsData);
-                    if (brands != null)
-                    {
-                        await _dbcontext.AddRangeAsync(brands);
-                    }
-                }
-
-                await _dbcontext.SaveChangesAsync();
             }
+
+            if (!dbContext.ProductTypes.Any())
+            {
+                var productsTypesData = await File.ReadAllTextAsync("../Persistence/Data/DataSeeding/types.json");
+                var types = JsonSerializer.Deserialize<List<ProductType>>(productsTypesData);
+                if (types != null)
+                {
+                    await dbContext.AddRangeAsync(types);
+                }
+            }
+
+            if (!dbContext.ProductBrands.Any())
+            {
+                string brandsPath = Path.Combine("../Persistence/Data/DataSeeding/brands.json");
+                var productsBrandsData = await File.ReadAllTextAsync(brandsPath);
+                var brands = JsonSerializer.Deserialize<List<ProductBrand>>(productsBrandsData);
+                if (brands != null)
+                {
+                    await dbContext.AddRangeAsync(brands);
+                }
+            }
+
+            if (!dbContext.DeliveryMethods.Any())
+            {
+                string brandsPath = Path.Combine("../Persistence/Data/DataSeeding/delivery.json");
+                var methodsData = await File.ReadAllTextAsync(brandsPath);
+                var methods = JsonSerializer.Deserialize<List<DeliveryMethod>>(methodsData);
+                if (methods != null)
+                {
+                    await dbContext.AddRangeAsync(methods);
+                }
+            }
+
+            await dbContext.SaveChangesAsync();
+            //}
         }
         catch (Exception ex)
         {
@@ -68,14 +70,14 @@ public class DbInitializer : IDbInitializer
 
     public async Task IdentitySeedAsync()
     {
-        if (!_roleManager.Roles.Any())
+        if (!roleManager.Roles.Any())
         {
-            await _roleManager.CreateAsync(new IdentityRole("Admin"));
-            await _roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
+            await roleManager.CreateAsync(new IdentityRole("Admin"));
+            await roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
         }
 
 
-        if (!_userManager.Users.Any())
+        if (!userManager.Users.Any())
         {
             var adminUser = new User
             {
@@ -84,7 +86,7 @@ public class DbInitializer : IDbInitializer
                 Email = "admin@example.com",
                 PhoneNumber = "0888888888"
             };
-            await _userManager.CreateAsync(adminUser, "Admin@123456");
+            await userManager.CreateAsync(adminUser, "Admin@123456");
 
             // Create super admin user
             var superAdminUser = new User
@@ -94,11 +96,10 @@ public class DbInitializer : IDbInitializer
                 EmailConfirmed = true,
                 PhoneNumber = "0888888888"
             };
-            await _userManager.CreateAsync(superAdminUser, "SuperAdmin@123456");
+            await userManager.CreateAsync(superAdminUser, "SuperAdmin@123456");
 
-            await _userManager.AddToRoleAsync(adminUser, "Admin");
-            await _userManager.AddToRoleAsync(superAdminUser, "SuperAdmin");
-            
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+            await userManager.AddToRoleAsync(superAdminUser, "SuperAdmin");
         }
     }
 }
