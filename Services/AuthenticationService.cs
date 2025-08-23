@@ -93,7 +93,7 @@ public class AuthenticationService(UserManager<User> userManager, IConfiguration
     {
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Email, user.Email!),
             new Claim(ClaimTypes.Name, user.DisplayName),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
         };
