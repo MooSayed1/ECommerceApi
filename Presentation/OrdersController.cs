@@ -6,7 +6,7 @@ using Shared.Dtos.OrderDtos;
 
 namespace Presintation;
 
-public class OrderController(IServiceManager serviceManager) : ApiController
+public class OrdersController(IServiceManager serviceManager) : ApiController
 {
     [HttpPost]
     public async Task<ActionResult<OrderResultDto>> Create(OrderRequest orderRequest)
@@ -17,8 +17,24 @@ public class OrderController(IServiceManager serviceManager) : ApiController
     }
 
     [HttpGet]
-    public async ActionResult<IEnumerable<OrderResultDto>> GetAllOrder()
+    public async Task<ActionResult<IEnumerable<OrderResultDto>>> GetAllOrder()
     {
-        
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var orders = await serviceManager.OrderService.GetAllOrdersByEmailAsync(email);
+        return Ok(orders);
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<OrderResultDto>> GetOrder(Guid id)
+    {
+        var order = await serviceManager.OrderService.GetOrderByIdAsync(id);
+        return Ok(order);
+    }
+
+    [HttpGet("DeliveryMethods")]
+    public async Task<ActionResult<IEnumerable<DeliveryMethodDto>>> GetDeliveryMethods()
+    {
+        return Ok(await serviceManager.OrderService.GetAllDeliveryMethodsAsync());
+    }
+    
 }

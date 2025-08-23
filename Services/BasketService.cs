@@ -1,6 +1,7 @@
 using AutoMapper;
 using Domain.Contracts;
 using Domain.Entities;
+using Domain.Exceptions;
 using Services.Abstraction.Interfaces;
 using Shared.Dtos.CustomerBasketDtos;
 
@@ -10,12 +11,8 @@ public class BasketService(IBasketRepository basketRepository, IMapper mapper) :
 {
     public async Task<BasketDto?> GetBasketAsync(string id)
     {
-        var basket = await basketRepository.GetBasketAsync(id);
+        var basket = await basketRepository.GetBasketAsync(id) ?? throw new BasketNotFoundException(id);
 
-        if (basket == null)
-        {
-            return null;
-        }
 
         return mapper.Map<BasketDto>(basket);
     }
@@ -27,8 +24,8 @@ public class BasketService(IBasketRepository basketRepository, IMapper mapper) :
 
     public async Task<BasketDto?> UpdateBasketAsync(BasketDto basketDto)
     {
-        var customerBasket = await basketRepository.UpdateBasketAsync(mapper.Map<CustomerBasket>(basketDto));
-        if (customerBasket == null) throw new Exception("Basket could not be updated");
+        var customerBasket = await basketRepository.UpdateBasketAsync(mapper.Map<CustomerBasket>(basketDto)) ??
+                             throw new BasketNotFoundException(basketDto.Id);
         var resultCustomerDto = mapper.Map<BasketDto>(customerBasket);
         return resultCustomerDto;
     }
