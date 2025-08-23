@@ -1,11 +1,13 @@
 using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstraction.Interfaces;
 using Shared.Dtos.OrderDtos;
 
 namespace Presintation;
 
+[Authorize]
 public class OrdersController(IServiceManager serviceManager) : ApiController
 {
     [HttpPost]

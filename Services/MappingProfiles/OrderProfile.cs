@@ -8,8 +8,8 @@ public class OrderProfile :  Profile
 {
     public OrderProfile()
     {
-        CreateMap<Address, AddressDto>();
-        CreateMap<DeliveryMethod, DeliveryMethodDto>();
+        CreateMap<Address, AddressDto>().ReverseMap();
+        CreateMap<DeliveryMethod, DeliveryMethodDto>().ReverseMap();
         
         CreateMap<OrderItem, OrderItemDto>()
             .ForMember(o => o.ProductId, opt => opt.MapFrom(src => src.Product.ProductId))
@@ -18,7 +18,7 @@ public class OrderProfile :  Profile
 
         CreateMap<Order, OrderResultDto>()
             .ForMember(o => o.DeliveryMethod, opt => opt.MapFrom(d => d.DeliveryMethod.ShortName))
-            .ForMember(o => o.PaymentStatus, opt => opt.MapFrom(d => d.ToString()))
+            .ForMember(o => o.PaymentStatus, opt => opt.MapFrom(d => d.PaymentStatus.ToString()))
             .ForMember(o=>o.Total,opt=>opt.MapFrom(src=>src.SubTotal+src.DeliveryMethod.Price));
 
     }
