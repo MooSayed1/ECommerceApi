@@ -47,12 +47,13 @@ public class OrderService(IUnitOfWork unitOfWork, IMapper mapper, IBasketReposit
                              ?? throw new DeliveryMethodNotFoundException(request.DeliveryMethodId);
 
         // subtotal
+        var orderRepo = unitOfWork.GetRepo<Order, Guid>();
         decimal subtotal = orderItems.Sum(item => item.Price * item.Quantity);
 
         // Create Order
-        var order = new Order(email, address, deliveryMethod, subtotal, orderItems);
+        var order = new Order(email, address, deliveryMethod, subtotal, orderItems,basket.PaymentIntentId!);
         // Add and save db
-        await unitOfWork.GetRepo<Order, Guid>().AddAsync(order);
+        await orderRepo.AddAsync(order);
         await unitOfWork.SaveChangesAsync();
         // Map, return 
         return mapper.Map<OrderResultDto>(order);

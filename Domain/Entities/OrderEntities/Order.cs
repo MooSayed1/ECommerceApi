@@ -8,7 +8,8 @@ public class Order : BaseEntity<Guid>
         ShippingAddress shippingAddress,
         DeliveryMethod deliveryMethod,
         decimal subTotal,
-        ICollection<OrderItem> orderItems
+        ICollection<OrderItem> orderItems,
+        string paymentIntentId
         )
     {
         UserEmail = userEmail;
@@ -16,6 +17,7 @@ public class Order : BaseEntity<Guid>
         DeliveryMethod = deliveryMethod;
         SubTotal = subTotal;
         OrderItems = orderItems;
+        PaymentIntentId = paymentIntentId;
     }
 
     public Order()
@@ -31,5 +33,5 @@ public class Order : BaseEntity<Guid>
     public int? DeliveryMethodId { get; set; }
     public decimal SubTotal { get; set; }
     public DateTimeOffset OrderDate { get; set; } =  DateTimeOffset.Now;
-    public string PaymentIntendId { get; set; } = string.Empty;
+    public string PaymentIntentId { get; set; }
 }

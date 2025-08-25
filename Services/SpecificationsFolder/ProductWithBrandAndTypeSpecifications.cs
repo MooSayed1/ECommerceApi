@@ -2,7 +2,7 @@ using Domain.Contracts;
 using Domain.Entities;
 using Shared;
 
-namespace Services.Specifications;
+namespace Services.SpecificationsFolder;
 
 public class ProductWithBrandAndTypeSpecifications : Specifications<Product>
 {

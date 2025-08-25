@@ -12,7 +12,7 @@ public record OrderResultDto
     public string PaymentStatus { get; init; } 
     public string DeliveryMethod { get; init; } // configure the auto mapper for this one
     public decimal SubTotal { get; init; }
-    DateTimeOffset OrderDate { get; init; } =  DateTimeOffset.Now;
+    DateTimeOffset OrderDate { get; init; } =  DateTimeOffset.UtcNow;
     public string PaymentIntendId { get; init; } = string.Empty;
     public int Total { get; init; }
 }
