@@ -1,5 +1,3 @@
-using Shared.Enums;
-
 namespace Domain.Entities.OrderEntities;
 
 using ShippingAddress = Domain.Entities.OrderEntities.Address;

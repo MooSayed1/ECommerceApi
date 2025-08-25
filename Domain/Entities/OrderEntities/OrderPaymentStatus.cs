@@ -1,4 +1,4 @@
-namespace Shared.Enums;
+namespace Domain.Entities.OrderEntities;
 
 public enum OrderPaymentStatus
 {

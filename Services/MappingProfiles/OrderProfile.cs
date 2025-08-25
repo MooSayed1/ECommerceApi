@@ -8,10 +8,10 @@ public class OrderProfile :  Profile
 {
     public OrderProfile()
     {
-        CreateMap<Address, AddressDto>().ReverseMap();
+        CreateMap<Domain.Entities.OrderEntities.Address, AddressDto>().ReverseMap();
+        CreateMap<Domain.Entities.Address, AddressDto>().ReverseMap();
         CreateMap<DeliveryMethod, DeliveryMethodDto>().ReverseMap();
         
-        CreateMap<Domain.Entities.Address, AddressDto>().ReverseMap();
         CreateMap<OrderItem, OrderItemDto>()
             .ForMember(o => o.ProductId, opt => opt.MapFrom(src => src.Product.ProductId))
             .ForMember(o => o.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))

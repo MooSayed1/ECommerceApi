@@ -8,16 +8,10 @@ using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Persistance.Repositories;
 
-public class BasketRepository : IBasketRepository
+public class BasketRepository(IConnectionMultiplexer redis) : IBasketRepository
 {
-    private readonly IConnectionMultiplexer _redis;
-    private IDatabase _database;
+    private readonly IDatabase _database = redis.GetDatabase();
 
-    public BasketRepository(IConnectionMultiplexer  redis)
-    {
-        _redis = redis;
-        _database = _redis.GetDatabase();
-    } 
     public async Task<CustomerBasket?> GetBasketAsync(string basketId)
     {
         var data = await _database.StringGetAsync(basketId);
@@ -25,7 +19,7 @@ public class BasketRepository : IBasketRepository
         if (data.IsNullOrEmpty)
             return null;
 
-        // return JsonSerializer.Serialize(data); // i have no idea why this is not working
+        // return JsonSerializer.DeSerialize<CustomerBasket>(data); // i have no idea why this is not working
         return JsonConvert.DeserializeObject<CustomerBasket>(data);
     }
 

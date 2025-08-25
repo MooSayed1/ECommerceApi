@@ -13,7 +13,6 @@ public class BasketService(IBasketRepository basketRepository, IMapper mapper) :
     {
         var basket = await basketRepository.GetBasketAsync(id) ?? throw new BasketNotFoundException(id);
 
-
         return mapper.Map<BasketDto>(basket);
     }
 

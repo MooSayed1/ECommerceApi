@@ -14,7 +14,7 @@ public class OrdersController(IServiceManager serviceManager) : ApiController
     public async Task<ActionResult<OrderResultDto>> Create(OrderRequest orderRequest)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
-        var orderDto = await serviceManager.OrderService.AddOrderAsync(orderRequest,email);
+        var orderDto = await serviceManager.OrderService.AddOrderAsync(orderRequest,email!);
         return Ok(orderDto);
     }
 

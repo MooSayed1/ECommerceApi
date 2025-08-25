@@ -1,6 +1,5 @@
 using Domain.Entities.OrderEntities;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Shared.Enums;
 
 namespace Persistance.Data.Configurations;
 

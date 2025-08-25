@@ -5,7 +5,7 @@ using Shared;
 
 namespace Services.MappingProfiles;
 
-public class PictureUrlResolver(IConfiguration _configuration) : IValueResolver<Product,ProductResultDto,string> 
+public class PictureUrlResolver(IConfiguration configuration) : IValueResolver<Product,ProductResultDto,string> 
 {
     public string Resolve(Product source, ProductResultDto destination, string destMember, ResolutionContext context)
     {
@@ -13,6 +13,6 @@ public class PictureUrlResolver(IConfiguration _configuration) : IValueResolver<
         {
             return string.Empty;
         }
-        return $"{_configuration["BaseUrl"]}{source.PictureUrl}";
+        return $"{configuration["JwtOptions:Issuer"]}{source.PictureUrl}";
     }
 }
