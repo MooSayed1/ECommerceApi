@@ -3,12 +3,14 @@ using Domain.Contracts;
 using Newtonsoft.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Domain.Exceptions;
+using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Persistance.Repositories;
 
-public class BasketRepository(IConnectionMultiplexer redis) : IBasketRepository
+public class BasketRepository(IConnectionMultiplexer redis, IUnitOfWork unitOfWork,IConfiguration configuration) : IBasketRepository
 {
     private readonly IDatabase _database = redis.GetDatabase();
 
@@ -20,7 +22,8 @@ public class BasketRepository(IConnectionMultiplexer redis) : IBasketRepository
             return null;
 
         // return JsonSerializer.DeSerialize<CustomerBasket>(data); // i have no idea why this is not working
-        return JsonConvert.DeserializeObject<CustomerBasket>(data);
+        var res = JsonConvert.DeserializeObject<CustomerBasket>(data);
+        return res;
     }
 
     public async Task<bool> DeleteBasketItemAsync(string customerId) => await _database.KeyDeleteAsync(customerId);
@@ -28,7 +31,15 @@ public class BasketRepository(IConnectionMultiplexer redis) : IBasketRepository
     public async Task<CustomerBasket?> UpdateBasketAsync(CustomerBasket basket, TimeSpan? timeout = null)
     {
         var jsonBasket = JsonConvert.SerializeObject(basket);
-        bool isCreatedOrUpdated = await _database.StringSetAsync(basket.Id, jsonBasket, timeout??TimeSpan.FromDays(30));
-        return isCreatedOrUpdated? await GetBasketAsync(basket.Id): null;
+        bool isCreatedOrUpdated =
+            await _database.StringSetAsync(basket.Id, jsonBasket, timeout ?? TimeSpan.FromDays(30));
+        foreach (var item in basket.Items)
+        {
+            var product = await unitOfWork.GetRepo<Product, int>().GetByIdAsync(item.Id) ?? throw new ProductNotFoundException(item.Id);
+            
+            item.PictureUrl = $"{configuration["JwtOptions:Issuer"]}/{product!.PictureUrl}";
+        }
+        
+        return isCreatedOrUpdated ? await GetBasketAsync(basket.Id) : null;
     }
 }

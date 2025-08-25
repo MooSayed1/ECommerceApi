@@ -11,7 +11,7 @@ namespace Presintation;
 public class OrdersController(IServiceManager serviceManager) : ApiController
 {
     [HttpPost]
-    public async Task<ActionResult<OrderResultDto>> Create(OrderRequest orderRequest)
+    public async Task<ActionResult<OrderResultDto>> CreateOrder(OrderRequest orderRequest)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
         var orderDto = await serviceManager.OrderService.AddOrderAsync(orderRequest,email!);

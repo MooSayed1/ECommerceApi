@@ -10,4 +10,5 @@ public class BasketItemDto
     public decimal Price { get; init; }
     [Range(1, 99)]
     public int Quantity { get; init; }
+    public string? PictureUrl { get; set; }
 }
