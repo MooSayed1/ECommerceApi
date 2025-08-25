@@ -5,5 +5,5 @@ namespace Domain.Entities;
 public class User : IdentityUser
 {
     public string DisplayName { get; set; }
-    public ICollection<Address> Address { get; set; }
+    public Address Address { get; set; }
 }
