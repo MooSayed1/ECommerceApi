@@ -3,7 +3,7 @@ using Domain.Entities.OrderEntities;
 
 namespace Services.SpecificationsFolder;
 
-public class OrderSpecifications : Specifications<Order> 
+public class OrderSpecifications: Specifications<Order> 
 {
     public OrderSpecifications(Guid id) : base(order => order.Id == id)
     {

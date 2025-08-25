@@ -50,7 +50,7 @@ public static class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
+        app.UseCors("CorsPolicy");
         app.UseAuthentication();
         app.UseAuthorization();
 

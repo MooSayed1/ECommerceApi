@@ -13,6 +13,6 @@ public class PictureUrlResolver(IConfiguration configuration) : IValueResolver<P
         {
             return string.Empty;
         }
-        return $"{configuration["JwtOptions:Issuer"]}{source.PictureUrl}";
+        return $"{configuration["JwtOptions:Issuer"]}/{source.PictureUrl}";
     }
 }

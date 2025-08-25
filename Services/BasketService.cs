@@ -24,7 +24,7 @@ public class BasketService(IBasketRepository basketRepository, IMapper mapper) :
     public async Task<BasketDto?> UpdateBasketAsync(BasketDto basketDto)
     {
         var customerBasket = await basketRepository.UpdateBasketAsync(mapper.Map<CustomerBasket>(basketDto)) ??
-                             throw new BasketNotFoundException(basketDto.Id);
+                             throw new BasketNotFoundException("NoIdea");
         var resultCustomerDto = mapper.Map<BasketDto>(customerBasket);
         return resultCustomerDto;
     }

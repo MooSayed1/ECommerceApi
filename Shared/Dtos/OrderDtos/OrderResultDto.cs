@@ -7,7 +7,7 @@ public record OrderResultDto
 {
     public Guid Id { get; init; }
     public string UserEmail { get; init; }
-    public AddressDto ShippingAddress { get; init; }
+    public AddressDto shipToAddress { get; init; }
     public ICollection<OrderItemDto> OrderItems { get; init; } = new List<OrderItemDto>();
     public string PaymentStatus { get; init; } 
     public string DeliveryMethod { get; init; } // configure the auto mapper for this one

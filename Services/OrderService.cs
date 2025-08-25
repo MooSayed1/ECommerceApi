@@ -49,7 +49,11 @@ public class OrderService(IUnitOfWork unitOfWork, IMapper mapper, IBasketReposit
         // subtotal
         var orderRepo = unitOfWork.GetRepo<Order, Guid>();
         decimal subtotal = orderItems.Sum(item => item.Price * item.Quantity);
-
+        var existingOrder = orderRepo.GetByIdAsync(new OrderPaymentSpecifications(basket.PaymentIntentId!));
+        if (existingOrder != null)
+        {
+            orderRepo.Delete((await existingOrder)!);
+        }
         // Create Order
         var order = new Order(email, address, deliveryMethod, subtotal, orderItems,basket.PaymentIntentId!);
         // Add and save db
