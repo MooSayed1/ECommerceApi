@@ -93,9 +93,9 @@ public class AuthenticationService(UserManager<User> userManager, IConfiguration
     {
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.Email, user.Email!),
-            new Claim(ClaimTypes.Name, user.DisplayName),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+            new(ClaimTypes.Email, user.Email!),
+            new(ClaimTypes.Name, user.DisplayName),
+            new(ClaimTypes.NameIdentifier, user.Id)
         };
         var roles = await userManager.GetRolesAsync(user);
         foreach (var role in roles)
