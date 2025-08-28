@@ -24,10 +24,10 @@ public class GenericRepo<TEntity, TKey> : IGenericRepo<TEntity, TKey> where TEnt
             : await _context.Set<TEntity>().ToListAsync();
     }
 
-    public Task<TEntity?> GetByIdAsync(Specifications<TEntity> specifications)
+    public async Task<TEntity?> GetByIdAsync(Specifications<TEntity> specifications)
     {
         var query = ApplySpecification(specifications);
-        return query!.FirstOrDefaultAsync();
+        return await query!.FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<TEntity>> GetAllAsync(Specifications<TEntity> specifications,

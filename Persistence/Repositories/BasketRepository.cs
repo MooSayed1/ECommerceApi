@@ -10,7 +10,8 @@ using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Persistance.Repositories;
 
-public class BasketRepository(IConnectionMultiplexer redis, IUnitOfWork unitOfWork,IConfiguration configuration) : IBasketRepository
+public class BasketRepository(IConnectionMultiplexer redis)
+    : IBasketRepository
 {
     private readonly IDatabase _database = redis.GetDatabase();
 
@@ -33,13 +34,7 @@ public class BasketRepository(IConnectionMultiplexer redis, IUnitOfWork unitOfWo
         var jsonBasket = JsonConvert.SerializeObject(basket);
         bool isCreatedOrUpdated =
             await _database.StringSetAsync(basket.Id, jsonBasket, timeout ?? TimeSpan.FromDays(30));
-        foreach (var item in basket.Items)
-        {
-            var product = await unitOfWork.GetRepo<Product, int>().GetByIdAsync(item.Id) ?? throw new ProductNotFoundException(item.Id);
-            
-            item.PictureUrl = $"{configuration["JwtOptions:Issuer"]}/{product!.PictureUrl}";
-        }
-        
+
         return isCreatedOrUpdated ? await GetBasketAsync(basket.Id) : null;
     }
 }

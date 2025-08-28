@@ -6,23 +6,14 @@ using Shared.ErrorModels;
 
 namespace E_commerceApplication.Middlewares;
 
-public class GlobalHandlingMiddleware
+public class GlobalHandlingMiddleware(RequestDelegate next, ILogger<GlobalHandlingMiddleware> logger)
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<GlobalHandlingMiddleware> _logger;
-
-    public GlobalHandlingMiddleware(RequestDelegate next, ILogger<GlobalHandlingMiddleware> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
-
     // Response [statusCode,ErrorMsg]
     public async Task InvokeAsync(HttpContext httpContext)
     {
         try
         {
-            await _next.Invoke(httpContext);
+            await next.Invoke(httpContext);
             if (httpContext.Response.StatusCode == StatusCodes.Status404NotFound)
             {
                 await HandelNotFoundAsync(httpContext);
@@ -30,7 +21,7 @@ public class GlobalHandlingMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
+            logger.LogError(ex, ex.Message);
             await HandeExceptionAsync(httpContext, ex);
         }
     }
