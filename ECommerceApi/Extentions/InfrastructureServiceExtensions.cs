@@ -19,12 +19,12 @@ public static class InfrastructureServiceExtensions
         IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
+            options.UseSqlServer(configuration.GetConnectionString("ServerConnection"))
         );
 
 
         services.AddDbContext<IdentityAppDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"))
+            options.UseSqlServer(configuration.GetConnectionString("ServerIdentityConnection"))
         );
 
         services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<IdentityAppDbContext>();

@@ -14,6 +14,7 @@ public class GlobalHandlingMiddleware(RequestDelegate next, ILogger<GlobalHandli
         try
         {
             await next.Invoke(httpContext);
+            // if there's no exceptions 
             if (httpContext.Response.StatusCode == StatusCodes.Status404NotFound)
             {
                 await HandelNotFoundAsync(httpContext);

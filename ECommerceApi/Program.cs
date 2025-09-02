@@ -56,7 +56,7 @@ public static class Program
 
         app.MapControllers();
 
-        app.Run();
+        await app.RunAsync();
 
     }
 }
